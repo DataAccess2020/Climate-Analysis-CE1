@@ -25,3 +25,20 @@ ggplot(aes(x = recoded_opinion, y = n, color = region, fill = region))+
        geom_col()+
   facet_wrap(~ region)
        theme_bw()  
+
+ess <- ess%>%
+    mutate(region = ifelse(cntry == "ES" | cntry == "PT" | cntry =="IT", "Southern Countries", 
+                      ifelse(cntry == "IS" | cntry == "SE" | cntry == "FI" | cntry == "NO", "Northern Countries", 
+                                "Others" )))       
+ess_pg3 <- ess[, c("sbsrnen","region","wrclmch")]
+ess_pg3 <- na.omit(ess_pg3)
+ess_pg3 <- filter(
+    ess_pg3,
+    region %in% c("Southern Countries", "Northern Countries")
+)
+ggplot(ess_pg3, aes(x = wrclmch, y = sbsrnen)) +
+    geom_smooth(method = "lm") +
+    theme_bw()
+m.v <- lm(sbsrnen ~ wrclmch,
+      data = ess_pg3)
+summary(m.v)
