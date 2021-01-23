@@ -8,8 +8,15 @@ ess_pg2 <-ess_pg2 %>%
   mutate(recoded_opinion = ifelse(sbsrnen <= 2, "Favor",
                                   ifelse(sbsrnen == 3, "Neutral",
                                           "Against")))
-
 ess_pg2 <- filter(
   ess_pg2,
   cntry %in% c("DE", "IT")
 )
+ess_pg2 %>% 
+  group_by(recoded_opinion, cntry)%>% 
+  count()%>% 
+ggplot(aes(x = recoded_opinion, y = n, color = cntry, fill = cntry))+
+       geom_col()+
+  facet_wrap(~ cntry, scales = "free_y")
+       theme_bw()  
+       
