@@ -9,4 +9,7 @@ ess_pg2 <-ess_pg2 %>%
                                   ifelse(sbsrnen == 3, "Neutral",
                                           "Against")))
 
-
+ess_pg2 <- filter(
+  ess_pg2,
+  cntry %in% c("DE", "IT")
+)
