@@ -57,7 +57,7 @@ ess_pg3 <- filter(
 
 #Plotting the relationship 
 
-ggplot(ess_pg3, (aes(x = SubsidiseRenewableEnergy, y = WorriedClimateChange))) +
+ggplot(ess_pg3, (aes(x = WorriedClimateChange, y = SubsidiseRenewableEnergy))) +
     geom_smooth(method = "lm") +
     theme_bw()
 
