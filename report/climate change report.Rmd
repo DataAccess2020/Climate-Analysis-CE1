@@ -1,0 +1,30 @@
+---
+title: "Climate change analysis:report"
+author: "Catalina and Yaming"
+date: "2021/1/24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Research question
+
+Are people from Northern countries more in favor of policies to reduce climate change than people frpm Sourthern countries?
+
+# Hypothesis
+
+In northern countries, individuals are more worried about climate change than in southern countries. For this reason, we hypothesize that the people from Northern countries would be more in favour the policies to reduce climate change by subsidising renewable energy than people from Southern countries.
+
+# visualization testing
+
+We can see in Northern countries, there are more than 4000 people have favor opinion but in Southern countries, there are only about 4000 people have favor opinion. It shows that the people from Northern countries would be more favor the policies to reduce climate change by subsidising renewable energy than people from southern countries. 
+
+# statistical test
+
+
+We can see the "WorriedClimateChange" have a negative effect on "SubsidiseRenewableEnergy", it means the larger "WorriedClimateChange", the smaller "SubsidiseRenewableEnergy". It represents the more people worried about climate change, they would be more in favor of policies to reduce climate change.
+
+
+
