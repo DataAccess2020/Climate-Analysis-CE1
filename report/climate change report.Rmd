@@ -31,8 +31,8 @@ To start with out research, we decided to use the European Social Survey as a so
 Firstly we imported the data and then we deleted all missing values while checking there were no answers corresponding to "Refusal", "Don't Know" or "No Answer".
 
 ```{r}
-setwd("D:/COM/Data analysis/ESS8e02_1.stata")
-ess <- import("ESS8e02_1.dta")
+setwd("/Users/catalinamasp/Documents/UNIMI/R")
+ess <- import("ESS8e02.2_F1.sav")	
 ess_pg <- ess[, c("sbsrnen","cntry")]
 ess_pg2 <- na.omit(ess_pg)
 view(ess_pg2)
