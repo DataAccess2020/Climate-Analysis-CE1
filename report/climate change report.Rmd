@@ -1,28 +1,125 @@
 ---
-title: "Climate change analysis:report"
+title: "Climate change analysis"
+subtitle: "Report"
 author: "Catalina and Yaming"
 date: "2021/1/24"
-output: html_document
+output: 
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: github
+
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(rio)
+library(tidyverse)
 ```
-
 # Research question
 
-Are people from Northern countries more in favor of policies to reduce climate change than people frpm Sourthern countries?
+As part of our Class Exercise 1, we developed our research question and Hypothesis as follows:
+
+Are people from Northern European countries more in favor of policies to reduce climate change than people from Sourthern European countries?
 
 # Hypothesis
 
-In northern countries, individuals are more worried about climate change than in southern countries. For this reason, we hypothesize that the people from Northern countries would be more in favour the policies to reduce climate change by subsidising renewable energy than people from Southern countries.
+In Northern European countries, individuals are more worried about climate change than in Southern European Countries. For this reason, we hypothesize that the people from Northern European countries would be more in favour the policies to reduce climate change by subsidising renewable energy than people from Southern European  countries.
 
-# visualization testing
+To start with out research, we decided to use the European Social Survey as a source and check the variable "sbsrnen" that answers to the question "To what extent are you in favour or against the following policies in [country] to reduce climate change?".
+Firstly we imported the data and then we deleted all missing values while checking there were no answers corresponding to "Refusal", "Don't Know" or "No Answer".
 
-We can see in Northern countries, there are more than 4000 people have favor opinion but in Southern countries, there are only about 4000 people have favor opinion. It shows that the people from Northern countries would be more favor the policies to reduce climate change by subsidising renewable energy than people from southern countries. 
+```{r}
+setwd("/Users/catalinamasp/Documents/UNIMI/R")
+ess <- import("ESS8e02.2_F1.sav")
+ess_pg <- ess[, c("sbsrnen","cntry")]
+ess_pg2 <- na.omit(ess_pg)
+view(ess_pg2)
+```
 
-# statistical test
+Afterwards, we renamed the name of the variable, calling it "Subsidise Renewable Energy". Then, we decided to recode the variable in order to group the different values into categories, therefore we set the category "Favor" for the values 1 "Strongly in favour" and 2 "Somewhat in favour". Then, for the value 3 "Neither in favour nor against", we set the category "Neutral" while for 4, and 5 "Somewhat against" and "Strongly against", respectively, we set the category "Against". 
 
+```{r}
+  names(ess_pg2)[names(ess_pg2) == "sbsrnen"] <- "SubsidiseRenewableEnergy"
+ess_pg2 <-ess_pg2 %>%
+  mutate(recoded_opinion = ifelse(SubsidiseRenewableEnergy <= 2, "Favor",
+                                  ifelse(SubsidiseRenewableEnergy == 3, "Neutral",
+                                          "Against")))
+```
+
+To start with our analysis we had to filter the data selecting just the countries we were interested in. Therefore, we grouped Sweden, Finland, Norway and Iceland under Northern European Countries and Portugal, Spain and Italy under "Southern European Countries" as categories under the new variable "Region".
+
+```{r}
+ess_pg2 <- ess_pg2 %>%
+  mutate(region = ifelse(cntry == "ES" | cntry == "PT" | cntry =="IT", "Southern Countries", 
+  ifelse(cntry == "IS" | cntry == "SE" | cntry == "FI" | cntry == "NO", "Northern Countries", 
+  "Others" )))
+
+ess_pg2 <- filter(
+  ess_pg2,
+  region %in% c("Southern Countries", "Northern Countries")
+)
+
+```
+
+# Visualization testing
+
+To test our empirical hypothesis we first visualized the data in a ggplot column bar, in order to see which was the recorded opinion per region.
+
+We can see that in Northern European countries, more than 4000 people are in favor to subsidise renewable energy to reduce climate change, whereas in Southern European countries, around 4000 people have a favorable opinion. It shows that the people from Northern European countries would be more in favor the policies to reduce climate change by subsidising renewable energy than people from southern Europea countries. Furthermore, we can see that in Southern European Countries there are more people against subsidising the renewable energy to reduce climate change than people that are neutral about the topic, where in Northern European Countries is the other way around.
+
+```{r figs, echo=FALSE,fig.cap="\\label{fig:figs}"}
+ess_pg2 %>%
+  group_by(recoded_opinion, region, cntry)%>% 
+  count()%>% 
+ggplot(aes(x = recoded_opinion, y = n, color = region, fill = region))+
+       geom_col()+
+    ylab ("N of People") +
+xlab ("Opinion")+
+  facet_wrap(~ region)+
+       theme_bw()  
+```
+    
+# Statistical test
+
+To test the relationship between how worried people in these countries are about Climate Change and their opinion on subsidising renewable energies to reduce it, we picked another variable called "wrclmch" that we recoded into "Worried about climate change".
+
+```{r}
+ess <- ess%>%
+    mutate(region = ifelse(cntry == "ES" | cntry == "PT" | cntry =="IT", "Southern Countries", 
+                      ifelse(cntry == "IS" | cntry == "SE" | cntry == "FI" | cntry == "NO", "Northern Countries", 
+                                "Others" )))
+
+ess_pg3 <- ess[, c("sbsrnen","region","wrclmch")]
+ess_pg3 <- na.omit(ess_pg3)
+names(ess_pg3)[names(ess_pg3) == "sbsrnen"] <- "SubsidiseRenewableEnergy"
+names(ess_pg3)[names(ess_pg3) == "wrclmch"] <- "WorriedClimateChange"
+
+ess_pg3 <- filter(
+    ess_pg3,
+    region %in% c("Southern Countries", "Northern Countries")
+) 
+```
+
+To test the relationship we developed a linear regression where the Subsidise Renewable Energy variable is the dependent variable and  "Worried Climate Change" is the independent variable.
+
+```{r}
+L.Regression <- lm(SubsidiseRenewableEnergy ~ WorriedClimateChange,
+      data = ess_pg3)
+summary(L.Regression)
+```
+
+
+In the regression we can see that there is a negative relationship between how worried people are about climate change and if they would be in favor of subsidising renewable energy to reduce it. 
+We can see the intercept is at 2.5, this means that for each decrease in worry about climate change, there is an increase of 2.5 in the scales of opinion in favor of subsidise, where the highest values (4 and 5) recall an opinion against subsidising renewable energies to reduce climate change.
+
+Then, we plotted the regression.
+
+
+```{r}
+ggplot(ess_pg3, (aes(x = WorriedClimateChange, y = SubsidiseRenewableEnergy))) +
+    geom_smooth(method = "lm") +
+    theme_bw()
+```
 
 We can see the "WorriedClimateChange" have a negative effect on "SubsidiseRenewableEnergy", it means the larger "WorriedClimateChange", the smaller "SubsidiseRenewableEnergy". It represents the more people worried about climate change, they would be more in favor of policies to reduce climate change.
 
