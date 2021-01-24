@@ -31,8 +31,8 @@ To start with out research, we decided to use the European Social Survey as a so
 Firstly we imported the data and then we deleted all missing values while checking there were no answers corresponding to "Refusal", "Don't Know" or "No Answer".
 
 ```{r}
-setwd("/Users/catalinamasp/Documents/UNIMI/R")
-ess <- import("ESS8e02.2_F1.sav")
+setwd("D:/COM/Data analysis/ESS8e02_1.stata")
+ess <- import("ESS8e02_1.dta")
 ess_pg <- ess[, c("sbsrnen","cntry")]
 ess_pg2 <- na.omit(ess_pg)
 view(ess_pg2)
@@ -81,7 +81,7 @@ xlab ("Opinion")+
        theme_bw()  
 ```
     
-#Statistical test
+# Statistical test
 
 To test the relationship between how worried people in these countries are about Climate Change and their opinion on subsidising renewable energies to reduce it, we picked another variable called "wrclmch" that we recoded into "Worried about climate change".
 
@@ -126,4 +126,9 @@ ggplot(ess_pg3, (aes(x = WorriedClimateChange, y = SubsidiseRenewableEnergy))) +
 We can see the "WorriedClimateChange" have a negative effect on "SubsidiseRenewableEnergy", it means the larger "WorriedClimateChange", the smaller "SubsidiseRenewableEnergy". It represents the more people worried about climate change, they would be more in favor of policies to reduce climate change.
 
 
+# Conclusion
+
+According to the Visualization testing, we can see that in Northern European Countries there are more people agree with policies to reduce climate change by subsidising renewable energy than people from Southern European Countries. Furthermore, in Southern European Countries there are more people against subsidising the renewable energy to reduce climate change than people that are neutral about the topic, where in Northern European Countries is the other way around. And the statistic testing show us that there is a negative relationship between how worried people are about climate change and if they would be in favor of subsidising renewable energy to reduce it. 
+
+So, we can conclude that the people from Northern European countries would be more in favour the policies to reduce climate change by subsidising renewable energy than people from Southern European countries.And the more people worried about climate change, they would be more in favor of policies to reduce climate change.
 
