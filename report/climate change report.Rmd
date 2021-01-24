@@ -1,8 +1,8 @@
 ---
-title: "Climate change analysis"
+title: "Climate Change Analysis"
 subtitle: "Report"
-author: "Catalina and Yaming"
-date: "2021/1/24"
+author: "Catalina Mas Pohmajevic and Yaming Dong"
+date: "January, 24, 2021"
 output: 
   prettydoc::html_pretty:
     theme: leonids
@@ -15,9 +15,11 @@ knitr::opts_chunk$set(echo = TRUE)
 library(rio)
 library(tidyverse)
 ```
-# Research question
+# Class Exercise 1
 
 As part of our Class Exercise 1, we developed our research question and Hypothesis as follows:
+
+# Research Question
 
 Are people from Northern European countries more in favor of policies to reduce climate change than people from Sourthern European countries?
 
@@ -79,7 +81,7 @@ xlab ("Opinion")+
        theme_bw()  
 ```
     
-# Statistical test
+#Statistical test
 
 To test the relationship between how worried people in these countries are about Climate Change and their opinion on subsidising renewable energies to reduce it, we picked another variable called "wrclmch" that we recoded into "Worried about climate change".
 
